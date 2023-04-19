@@ -1,1 +1,1 @@
-node backend/index.js && cd frontend && npm start
+node backend/server.js && cd frontend && npm start
