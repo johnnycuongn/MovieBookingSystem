@@ -49,10 +49,17 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
       snack_id: chosenSnack, 
     }
 
-    await makeBooking(bookingData)
-
-
     console.log(bookingData);
+
+    try {
+      await makeBooking(bookingData)
+    }
+    catch (e) {
+      console.log(e);
+    }
+
+
+
   }
 
   

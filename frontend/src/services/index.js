@@ -26,7 +26,7 @@ export async function getSnacks() {
 const bookingDataParam = {
   ticket_id: 0,
   seat: '',
-  snack: ''
+  snack_id: ''
 }
 
 export async function makeBooking(data = bookingDataParam) {
@@ -34,7 +34,7 @@ export async function makeBooking(data = bookingDataParam) {
     ticket_id: data.ticket_id,
     status: 'incoming',
     seat: data.seat,
-    snack: data.snack
+    snack_id: data.snack_id
   }
   const response = postData(`${BASE_URL}/book`, requestData)
 }
