@@ -70,5 +70,6 @@ async function getCustomers() {
 
 module.exports = { 
   getMovies: getAllMovies, getMovie,
-  getSnacks, addBooking, getTickets
+  getSnacks, addBooking, getTickets,
+  getBookings
 }

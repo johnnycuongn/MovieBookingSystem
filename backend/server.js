@@ -3,7 +3,7 @@ var express = require('express')
 var bodyParser = require('body-parser');
 const cors = require('cors')
 
-const { getMovies, getMovie, addBooking, getSnacks, getTickets } = require('./model')
+const { getMovies, getMovie, addBooking, getSnacks, getTickets, getBookings } = require('./model')
 const port = 5001
 
 let app = express()
@@ -45,18 +45,26 @@ app.get('/tickets', async (req, res) => {
   })
 })
 
-app.get('/snacks', (req, res) => {
-  let snacks = []
+app.get('/snacks', async (req, res) => {
+  let snacks = await getSnacks()
   
   res.send({
     results: snacks
   })
 })
 
-app.post('/movie/book', (req, res) => {
+app.post('/book', (req, res) => {
   let body = req.body
   console.log('Make a booking');
-  console.log(object);
+  console.log(body);
+})
+
+app.get('/bookings', async (req, res) => {
+  const bookingsData = await getBookings()
+
+  res.send({
+    results: bookingsData
+  })
 })
 
 
