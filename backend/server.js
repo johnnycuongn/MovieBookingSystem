@@ -2,6 +2,7 @@ var express = require('express')
 // var router = express.Router();
 var bodyParser = require('body-parser');
 
+const { getMovies, addBooking, getSnacks } = require('./model')
 const port = 5001
 
 let app = express()
