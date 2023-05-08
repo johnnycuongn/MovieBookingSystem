@@ -32,6 +32,8 @@ async function getTickets() {
     if (theatre) data["theatre"] = theatre
   })
 
+  ticketsData = ticketsData.filter((data) => data.id && data.id.trim().length !== 0)
+
   return ticketsData
 }
 
