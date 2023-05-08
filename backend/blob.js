@@ -22,29 +22,34 @@ const blobServiceClient = BlobServiceClient.fromConnectionString(
 // Get a reference to a container
 const movieContainer = blobServiceClient.getContainerClient('movie-system');
 
-const snacksClient = movieContainer.getBlockBlobClient(movieBlobsNames.snacks)
-const bookingClient = movieContainer.getBlockBlobClient(movieBlobsNames.booking)
-const customerClient = movieContainer.getBlockBlobClient(movieBlobsNames.customer)
-const moviesClient = movieContainer.getBlockBlobClient(movieBlobsNames.movies)
-const snackBookingClient = movieContainer.getBlockBlobClient(movieBlobsNames.snack_booking)
-const theatreClient = movieContainer.getBlockBlobClient(movieBlobsNames.theatre)
-const ticketClient = movieContainer.getBlockBlobClient(movieBlobsNames.ticket)
+const client = {
+  snacks: movieContainer.getBlockBlobClient(movieBlobsNames.snacks),
+  booking: movieContainer.getBlockBlobClient(movieBlobsNames.booking),
+  customer: movieContainer.getBlockBlobClient(movieBlobsNames.customer),
+  movies: movieContainer.getBlockBlobClient(movieBlobsNames.movies),
+  snackBooking: movieContainer.getBlockBlobClient(movieBlobsNames.snack_booking),
+  theatre:  movieContainer.getBlockBlobClient(movieBlobsNames.theatre),
+  ticket: movieContainer.getBlockBlobClient(movieBlobsNames.ticket)
+}
 
-async function getDataFromBlob(blobClient = snacksClient) {
+async function getDataFromBlob(blobClient = client.snacks) {
   // Get blob content from position 0 to the end
   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
   // In browsers, get downloaded data by accessing downloadBlockBlobResponse.blobBody
   const downloadBlockBlobResponse = await blobClient.download(0);
-  console.log('\nDownloaded blob content...' + blobClient.name);
+  console.log('Downloading blob content...' + blobClient.name);
   const dataText = await streamToText(downloadBlockBlobResponse.readableStreamBody)
 
   const objectsData = await csvParse(dataText)
-  console.log(objectsData);
+  // console.log(objectsData);
   return objectsData
 
 }
 
-async function uploadDataToBlob(blobClient = snacksClient, data) {
+/**
+ * @param data array of objects
+ */
+async function uploadDataToBlob(blobClient = client.snacks, data) {
     // Create a unique name for the blob
   const blobName = 'test.csv';
 
@@ -64,27 +69,8 @@ async function uploadDataToBlob(blobClient = snacksClient, data) {
   );
 }
 
+module.exports = { getDataFromBlob, uploadDataToBlob, client}
 
-async function main() {
-  try {
-    console.log("Azure Blob storage v12 - JavaScript quickstart sample");
-
-    // Quick start code goes here
-
-  if (!AZURE_STORAGE_CONNECTION_STRING) {
-    throw Error('Azure Storage Connection string not found');
-  }
-
-
-  // const snacksData = await getDataFromBlob(snackBookingClient)
-  // snacksData.push({id: '10', quantity: '2', snack_id: '21', booking_id: '4'})
-  // await uploadDataToBlob(snackBookingClient, snacksData)
-
-  } catch (err) {
-    console.error(`Error: ${err.message}`);
-  }
-}
-
-main()
-  .then(() => console.log("Done"))
-  .catch((ex) => console.log(ex.message));
+// const snacksData = await getDataFromBlob(snackBookingClient)
+// snacksData.push({id: '10', quantity: '2', snack_id: '21', booking_id: '4'})
+// await uploadDataToBlob(snackBookingClient, snacksData)
