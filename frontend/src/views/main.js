@@ -19,25 +19,10 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 import TicketsGridView from './TicketsGridView';
 
-import {login, logout, getCurrentUser, isUserActive} from './user_session'
+import {login, logout, getCurrentUser, isUserActive} from '../services/user_session'
 import { Input, Stack, TextField } from '@mui/material';
 import { getTickets } from '../services';
 
-const movies = [
-  {
-  id: 1,
-  title: "Movie ONe",
-  desc: "Movie One desc"
-  },
-  {
-  id: 2,
-  title: "Movie Two",
-  desc: "Movie Two desc"
-  },
-
-]
-
-const BASE_URL = 'http://localhost:5001'
 
 const pages = ['Home', 'Manage Booking'];
 const settings = ['Profile', 'Account', 'Booking', 'Logout'];
@@ -52,7 +37,7 @@ export function Main() {
   
   useEffect(() => {
     setCurrentUser(getCurrentUser())
-    fetchInit()
+    // fetchInit()
 
   }, [])
 
@@ -101,7 +86,7 @@ export function Main() {
               textDecoration: 'none',
             }}
           >
-            {currentUser ? currentUser.username : ''}
+            {currentUser ? currentUser.name : ''}
           </Typography>
           <Box sx={{ flexGrow: 1, flexDirection: 'row' }}>
             {pages.map((page) => (
@@ -134,7 +119,7 @@ export function Main() {
       </Container>
     </AppBar>
     <Container>
-      <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.username : ''}</Typography>
+      <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.name : ''}</Typography>
       <TicketsGridView tickets={tickets ?? []}/>
     </Container>
     </>)
