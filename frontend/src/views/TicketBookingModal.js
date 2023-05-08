@@ -37,7 +37,7 @@ const snacks = [
   'snack4',
 ]
 
-export default function MovieBookingModal({movie, open, handleClose}) {
+export default function TicketBookingModal({ticket, open, handleClose}) {
 
   const [date, setDate] = useState(new Date());
 
@@ -57,10 +57,10 @@ export default function MovieBookingModal({movie, open, handleClose}) {
   >
     <Stack sx={style} spacing={2}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
-        {movie.title}
+        {ticket.movie["Title"]}
       </Typography>
       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        {movie.desc}
+        {ticket.date}
       </Typography>
       <br/>
       <DatePicker selected={date} onChange={(date) => setDate(date)} />

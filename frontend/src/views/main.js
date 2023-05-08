@@ -17,10 +17,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-import MoviesGridView from './MoviesGridView';
+import TicketsGridView from './TicketsGridView';
 
 import {login, logout, getCurrentUser, isUserActive} from './user_session'
 import { Input, Stack, TextField } from '@mui/material';
+import { getTickets } from '../services';
 
 const movies = [
   {
@@ -36,6 +37,8 @@ const movies = [
 
 ]
 
+const BASE_URL = 'http://localhost:5001'
+
 const pages = ['Home', 'Manage Booking'];
 const settings = ['Profile', 'Account', 'Booking', 'Logout'];
 
@@ -44,10 +47,21 @@ export function Main() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [usernameInputVal, setUsernameInputVal] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
+
+  const [tickets, setTickets] = useState([])
   
   useEffect(() => {
     setCurrentUser(getCurrentUser())
+    fetchInit()
+
   }, [])
+
+  async function fetchInit() {
+    const ticketsData = await getTickets()
+    console.log('Tickets');
+    console.log(ticketsData);
+    setTickets(ticketsData)
+  }
 
   const handleUserLogin = () => {
       if (usernameInputVal.trim().length === 0) return
@@ -121,7 +135,7 @@ export function Main() {
     </AppBar>
     <Container>
       <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.username : ''}</Typography>
-      <MoviesGridView movies={movies}/>
+      <TicketsGridView tickets={tickets ?? []}/>
     </Container>
     </>)
 }

@@ -1,14 +1,17 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {
-  Button, Card, CardActions, CardContent, CardMedia, Typography, Box, Modal
+  Button, Card, CardActions, CardContent, CardMedia, Typography, Box, Modal, Stack
 } from '@mui/material';
 
-import MovieBookingModal from './MovieBookingModal';
+import TicketBookingModal from './TicketBookingModal';
 
-export default function MovieCard({movie}) {
+export default function TicketCard({ticket}) {
 
   const [open, setOpen] = useState(false)
 
+  if (!ticket) {
+    return <></>
+  }
 
   return (<><Card sx={{ width: 0.8, height: 1 }}>
       {/* <CardMedia
@@ -17,10 +20,15 @@ export default function MovieCard({movie}) {
         alt={movie.title}
       /> */}
       <CardContent>
+        <Stack>
         <Typography variant="h5">
-          {movie.title}
+          {ticket.movie["Title"]}
         </Typography>
-        {movie.desc}
+        <p>{ticket.price}</p>
+        <p>{ticket.date}</p>
+        </Stack>
+
+        
       </CardContent>
       <CardActions>
         {
@@ -35,7 +43,7 @@ export default function MovieCard({movie}) {
       }
       </CardActions>
     </Card>
-    <MovieBookingModal movie={movie} open={open} handleClose={() => {
+    <TicketBookingModal ticket={ticket} open={open} handleClose={() => {
       setOpen(false)
     }}/>
     </>)
