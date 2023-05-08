@@ -1,3 +1,5 @@
+import { postData } from "./helpers"
+
 const BASE_URL = 'http://localhost:5001'
 
 export async function getTickets() {
@@ -12,4 +14,27 @@ export async function getMovies() {
   const body = await response.json()
 
   return body.results
+}
+
+export async function getSnacks() {
+  const response = await fetch(`${BASE_URL}/snacks`)
+  const body = await response.json()
+
+  return body.results
+}
+
+const bookingDataParam = {
+  ticket_id: 0,
+  seat: '',
+  snack: ''
+}
+
+export async function makeBooking(data = bookingDataParam) {
+  let requestData = {
+    ticket_id: data.ticket_id,
+    status: 'incoming',
+    seat: data.seat,
+    snack: data.snack
+  }
+  const response = postData(`${BASE_URL}/book`, requestData)
 }

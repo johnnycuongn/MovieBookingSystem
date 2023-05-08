@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, createContext} from 'react';
 
 import Container from '@mui/material/Container';
 import AppBar from '@mui/material/AppBar';
@@ -21,11 +21,16 @@ import TicketsGridView from './TicketsGridView';
 
 import {login, logout, getCurrentUser, isUserActive} from '../services/user_session'
 import { Input, Stack, TextField } from '@mui/material';
-import { getTickets } from '../services';
+import { getSnacks, getTickets } from '../services';
 
 
 const pages = ['Home', 'Manage Booking'];
 const settings = ['Profile', 'Account', 'Booking', 'Logout'];
+
+export const DataContext = createContext({
+  movies: [],
+  snacks: []
+})
 
 export function Main() {
 
@@ -34,10 +39,11 @@ export function Main() {
   const [currentUser, setCurrentUser] = useState(null)
 
   const [tickets, setTickets] = useState([])
+  const [snacks, setSnacks] = useState([])
   
   useEffect(() => {
     setCurrentUser(getCurrentUser())
-    // fetchInit()
+    fetchInit()
 
   }, [])
 
@@ -46,6 +52,9 @@ export function Main() {
     console.log('Tickets');
     console.log(ticketsData);
     setTickets(ticketsData)
+
+    const snacksData = await getSnacks()
+    setSnacks(snacksData)
   }
 
   const handleUserLogin = () => {
@@ -67,7 +76,7 @@ export function Main() {
   }
 
   return (
-    <>
+    <DataContext.Provider value={{snacks: snacks}}>
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -122,5 +131,5 @@ export function Main() {
       <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.name : ''}</Typography>
       <TicketsGridView tickets={tickets ?? []}/>
     </Container>
-    </>)
+    </DataContext.Provider>)
 }

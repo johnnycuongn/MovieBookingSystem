@@ -1,10 +1,12 @@
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import {
    Typography, Box, Modal, FormControl, Input, InputLabel, Select, MenuItem, Button, Stack
 } from '@mui/material';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { DataContext } from './main';
+import { makeBooking } from '../services';
 
 
 const style = {
@@ -20,33 +22,40 @@ const style = {
 };
 
 const seatAvailable = [
-  'A1',
-  'A2',
-  'A3',
-  'A4',
-  'B1',
-  'B2',
-  'B3',
-  'B4',
-]
-
-const snacks = [
-  'snack1',
-  'snack2',
-  'snack3',
-  'snack4',
+  'a1',
+  'a2',
+  'a3',
+  'a4',
+  'b1',
+  'b2',
+  'b3',
+  'b4',
 ]
 
 export default function TicketBookingModal({ticket, open, handleClose}) {
 
   const [date, setDate] = useState(new Date());
 
-  const [chosenSeats, setChosenSeats] = useState([])
-  const [chosenSnacks, setChosenSnacks] = useState([])
+  const { snacks } = useContext(DataContext)
 
-  function bookingBtnClick() {
+  const [chosenSeat, setChosenSeat] = useState('')
+  const [chosenSnack, setChosenSnack] = useState('')
 
+  async function bookingBtnClick() {
+    console.log('Chosen snacks' + JSON.stringify(chosenSnack));
+    const bookingData = {
+      ticket_id: ticket.id,
+      seat: chosenSeat,
+      snack_id: chosenSnack, 
+    }
+
+    await makeBooking(bookingData)
+
+
+    console.log(bookingData);
   }
+
+  
 
   return (
   <Modal
@@ -73,12 +82,13 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={chosenSeats}
+          value={chosenSeat}
           label="Seat"
           onChange={(event) => {
-            setChosenSeats(seats => [...seats, event.target.value]);
+            // setChosenSeats(seats => [...seats, event.target.value]);
+            setChosenSeat(event.target.value)
           }}
-          multiple
+          // multiple
         >
           {seatAvailable.map(seat => {
             return <MenuItem value={seat}>{seat}</MenuItem>
@@ -90,15 +100,17 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={chosenSnacks}
-          label="Seat"
+          value={chosenSnack}
+          label="Snacks"
           onChange={(event) => {
-            setChosenSnacks(snack => [...snack, event.target.value]);
+            // setChosenSnacks(snack => [...snack, event.target.value]);
+            setChosenSnack(event.target.value)
           }}
-          multiple
+          // multiple
         >
           {snacks.map(snack => {
-            return <MenuItem value={snack}>{snack}</MenuItem>
+            if (!snack) return null
+            return <MenuItem key={snack.id} value={snack.id}>{snack.name}</MenuItem>
           })}
         </Select>
       </FormControl>
