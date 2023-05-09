@@ -44,7 +44,16 @@ async function getTheatres() {
 // BOOKING
 
 async function getBookings() {
-  return await getDataFromBlob(client.booking)
+  const ticketsData = await getTickets()
+  // const customersData = await getCustomers()
+  let bookingsData = await getDataFromBlob(client.booking)
+
+  bookingsData.map((bookingData) => {
+    const ticket = ticketsData.filter((ticket) => ticket.id === bookingData["ticket_id"])
+    if (ticket) bookingData["ticket"] = ticket
+  })
+
+  return bookingsData
 }
 
 async function createBooking(booking = {

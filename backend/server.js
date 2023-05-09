@@ -94,16 +94,19 @@ app.get('/bookings/all', async (req, res) => {
 })
 
 app.get('/bookings', async (req, res) => {
-  let body = req.body
-  if (!body.user.id) {
+  let user_id = req.get('user_id')
+  if (!user_id) {
     res.status(403).send({
       error: 'Bad Request'
     })
     return
   }
 
+  console.log('Get boooking ' + user_id);
+
   let bookingsData = await getBookings()
-  bookingsData = bookingsData.filter((data) => data["customer_id"] === body.user.id)
+  bookingsData = bookingsData.filter((data) => data["customer_id"] === user_id)
+  console.log('Booking data: ' + JSON.stringify(bookingsData));
   res.send({
     results: bookingsData
   })
