@@ -1,23 +1,27 @@
-import * as React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import { Main } from './views/main';
 import {
-  createBrowserRouter,
-  RouterProvider,
+  Routes,
+  Route,
+  BrowserRouter
 } from "react-router-dom";
+import ManageBookingPage from './views/ManageBookingPage';
+import AppNavigationBar from './views/AppBar';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Main />,
-  },
-]);
 
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <BrowserRouter>
+      <Routes>
+        <Route element={<AppNavigationBar />}>
+          <Route path='/' element={<Main />}/>
+          <Route path='/bookings' element={<ManageBookingPage />} />
+        </Route>
+        
+      </Routes>
+      </BrowserRouter>
     </div>
   );
 }

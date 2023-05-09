@@ -23,8 +23,12 @@ import {login, logout, getCurrentUser, isUserActive} from '../services/user_sess
 import { Input, Stack, TextField } from '@mui/material';
 import { getSnacks, getTickets } from '../services';
 
+import  { useNavigate } from 'react-router-dom'
 
-const pages = ['Home', 'Manage Booking'];
+const pages = [
+  { title: 'Home', route: '/'},
+  { title: 'Manage Booking', route: '/bookings'}
+]
 const settings = ['Profile', 'Account', 'Booking', 'Logout'];
 
 export const DataContext = createContext({
@@ -34,8 +38,6 @@ export const DataContext = createContext({
 
 export function Main() {
 
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [usernameInputVal, setUsernameInputVal] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
 
   const [tickets, setTickets] = useState([])
@@ -57,79 +59,12 @@ export function Main() {
     setSnacks(snacksData)
   }
 
-  const handleUserLogin = () => {
-      if (usernameInputVal.trim().length === 0) return
-
-      const success = login(usernameInputVal)
-      if (success) {
-        window.location.reload()
-      } else {
-        console.log('Unable to login');
-      }
-  }
-
-  const handleUserLogout = () => {
-    if (isUserActive()) {
-      const success = logout()
-      if (success) window.location.reload()
-    }
-  }
 
   return (
     <DataContext.Provider value={{snacks: snacks}}>
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            {currentUser ? currentUser.name : ''}
-          </Typography>
-          <Box sx={{ flexGrow: 1, flexDirection: 'row' }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            {isUserActive() ? 
-            <Stack direction={'row'}>
-              <Button sx={{ color: 'white', display: 'block' }} onClick={handleUserLogout}>
-                Logout
-              </Button>
-            </Stack>
-            : 
-            <Stack direction={'row'}>
-              <TextField label="Username" variant='outlined' sx={{ backgroundColor: 'white'}}
-                  value={usernameInputVal}
-                  onChange={(e) => setUsernameInputVal(e.target.value)}  
-              />
-              <Button sx={{ color: 'white', display: 'block' }} onClick={handleUserLogin}>Login</Button>
-            </Stack>}
-          </Box>
-        </Toolbar>
+      <Container>
+        <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.name : ''}</Typography>
+        <TicketsGridView tickets={tickets ?? []}/>
       </Container>
-    </AppBar>
-    <Container>
-      <Typography align='left' variant='h4'>Welcome {currentUser ? currentUser.name : ''}</Typography>
-      <TicketsGridView tickets={tickets ?? []}/>
-    </Container>
     </DataContext.Provider>)
 }
