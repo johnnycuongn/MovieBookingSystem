@@ -35,6 +35,9 @@ export default function ManageBookingPage() {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Theatre: {booking.ticket.theatre.theatre_number}
+        </Typography> 
+        <Typography variant="body2" color="text.secondary">
+          Snack: {booking.snacks.snack.name} - quantity: {booking.snacks.quantity}
         </Typography>
       </CardContent>
       </Card>
