@@ -3,7 +3,7 @@ var express = require('express')
 var bodyParser = require('body-parser');
 const cors = require('cors')
 
-const { getMovies, getMovie, addBooking, getSnacks, getTickets, getBookings } = require('./model')
+const { getMovies, getMovie, createBooking, getSnacks, getTickets, getBookings } = require('./model')
 const port = 5001
 
 let app = express()
@@ -53,10 +53,36 @@ app.get('/snacks', async (req, res) => {
   })
 })
 
-app.post('/book', (req, res) => {
+app.post('/book', async (req, res) => {
   let body = req.body
   console.log('Make a booking');
   console.log(body);
+
+  if (!body.seat) {
+    res.status(403).send({
+      error: 'No seat entered'
+    })
+    return
+  }
+
+  if (!body.user.id || !body.ticket_id || !body.snack_id) {
+    res.status(403).send({
+      error: 'Bad Request'
+    })
+    return
+  }
+
+  await createBooking({
+    seat: body.seat,
+    status: body.status ?? 'incoming',
+    customer_id: body.user.id,
+    ticket_id: body.ticket_id,
+    snack_id: body.snack_id
+  })
+
+  res.status(201).send({
+    status: 'success'
+  })
 })
 
 app.get('/bookings', async (req, res) => {

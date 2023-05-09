@@ -47,19 +47,40 @@ async function getBookings() {
   return await getDataFromBlob(client.booking)
 }
 
-async function addBooking(booking, snacks) {
-  const uploadedData = {
-    id: booking.id,
+async function createBooking(booking = {
+  seat: '',
+  status: '',
+  customer_id: '',
+  ticket_id: '',
+  snack_id: '',
+}) {
+
+  let bookingsData = await getDataFromBlob(client.booking)
+  let snackBookingsData = await getDataFromBlob(client.snackBooking)
+  const bookingId = bookingsData.length + 1
+  const bookingUploadedData = {
+    id: bookingId,
     seat: booking.seat,
     status: booking.status,
     customer_id: booking.customer_id,
     ticket_id: booking.ticket_id
   }
-  let bookingRetrievedData = await getDataFromBlob(client.booking)
 
+  const snackBookingUploadedData = {
+    id: snackBookingsData.length+1,
+    quantity: 2,
+    snack_id: booking.snack_id,
+    booking_id: bookingId
+  }
+
+  bookingsData.push(bookingUploadedData)
   // Upload snack booking
+  
+  snackBookingsData.push(snackBookingUploadedData)
 
   // Upload booking
+  await uploadDataToBlob(client.booking, bookingsData)
+  await uploadDataToBlob(client.snackBooking, snackBookingsData) 
 }
 
 // CUSTOMER
@@ -70,6 +91,6 @@ async function getCustomers() {
 
 module.exports = { 
   getMovies: getAllMovies, getMovie,
-  getSnacks, addBooking, getTickets,
+  getSnacks, createBooking, getTickets,
   getBookings
 }
