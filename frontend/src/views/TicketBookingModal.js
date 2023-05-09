@@ -1,6 +1,6 @@
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {
-   Typography, Box, Modal, FormControl, Input, InputLabel, Select, MenuItem, Button, Stack
+   Typography, Box, Modal, FormControl, Input, InputLabel, Select, MenuItem, Button, Stack, LinearProgress
 } from '@mui/material';
 import DatePicker from "react-datepicker";
 
@@ -40,9 +40,16 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
 
   const [chosenSeat, setChosenSeat] = useState('')
   const [chosenSnack, setChosenSnack] = useState('')
+  
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+
+  }, [])
 
   async function bookingBtnClick() {
     console.log('Chosen snacks' + JSON.stringify(chosenSnack));
+    setLoading(true)
     const bookingData = {
       ticket_id: ticket.id,
       seat: chosenSeat,
@@ -56,9 +63,12 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
     }
     catch (e) {
       console.log(e);
+    } finally {
+      setLoading(true)
     }
 
-
+    handleClose()
+    
 
   }
 
@@ -79,7 +89,10 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
         {ticket.date}
       </Typography>
       <br/>
-      <DatePicker selected={date} onChange={(date) => setDate(date)} />
+      {/* <DatePicker selected={date} onChange={(date) => setDate(date)} /> */}
+      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        {ticket.price}
+      </Typography>
       <FormControl variant="standard" fullWidth>
         <InputLabel htmlFor="component-simple">Number of people</InputLabel>
         <Input id="component-simple" type='number' defaultValue={1}/>
@@ -122,7 +135,8 @@ export default function TicketBookingModal({ticket, open, handleClose}) {
         </Select>
       </FormControl>
 
-      <Button variant='contained' onClick={bookingBtnClick}>Make a booking</Button>
+      {!loading && <Button variant='contained' onClick={bookingBtnClick}>Make a booking</Button>}
+      {loading && <LinearProgress />}
     </Stack>
   </Modal>)
 }
