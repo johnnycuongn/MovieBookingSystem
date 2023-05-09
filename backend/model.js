@@ -47,10 +47,23 @@ async function getBookings() {
   const ticketsData = await getTickets()
   // const customersData = await getCustomers()
   let bookingsData = await getDataFromBlob(client.booking)
+  const bookingsids = bookingsData.map((data) => data.id)
+
+  let snackBookingsData = await getDataFromBlob(client.snackBooking)
+  const snacksData = await getSnacks()
+
+  snackBookingsData = snackBookingsData.filter((data) => bookingsids.includes(data.booking_id))
+  snackBookingsData.map((data) => {
+    const snack = snacksData.filter((snackData) => snackData.id === data.snack_id)[0]
+    if (snack) data["snack"] = snack
+  })
 
   bookingsData.map((bookingData) => {
-    const ticket = ticketsData.filter((ticket) => ticket.id === bookingData["ticket_id"])
+    const ticket = ticketsData.filter((ticket) => ticket.id === bookingData["ticket_id"])[0]
     if (ticket) bookingData["ticket"] = ticket
+
+    let snackBookings = snackBookingsData.filter((snackBooking) => snackBooking.booking_id === bookingData.id)
+    if (snackBookings && snackBookings.length > 0) bookingData["snacks"] = snackBookings[snackBookings.length-1]
   })
 
   return bookingsData

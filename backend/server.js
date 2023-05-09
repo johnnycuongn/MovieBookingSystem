@@ -102,11 +102,8 @@ app.get('/bookings', async (req, res) => {
     return
   }
 
-  console.log('Get boooking ' + user_id);
-
   let bookingsData = await getBookings()
   bookingsData = bookingsData.filter((data) => data["customer_id"] === user_id)
-  console.log('Booking data: ' + JSON.stringify(bookingsData));
   res.send({
     results: bookingsData
   })
