@@ -22,14 +22,18 @@ const style = {
 };
 
 const seatAvailable = [
-  'a1',
-  'a2',
-  'a3',
-  'a4',
-  'b1',
-  'b2',
-  'b3',
-  'b4',
+  '1a',
+  '2a',
+  '3a',
+  '4a',
+  '1b',
+  '2b',
+  '3b',
+  '4b',
+  '1c',
+  '2c',
+  '3c',
+  '4c'
 ]
 
 export default function TicketBookingModal({ticket, open, handleClose}) {
