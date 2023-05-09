@@ -85,9 +85,25 @@ app.post('/book', async (req, res) => {
   })
 })
 
-app.get('/bookings', async (req, res) => {
+app.get('/bookings/all', async (req, res) => {
   const bookingsData = await getBookings()
 
+  res.send({
+    results: bookingsData
+  })
+})
+
+app.get('/bookings', async (req, res) => {
+  let body = req.body
+  if (!body.user.id) {
+    res.status(403).send({
+      error: 'Bad Request'
+    })
+    return
+  }
+
+  let bookingsData = await getBookings()
+  bookingsData = bookingsData.filter((data) => data["customer_id"] === body.user.id)
   res.send({
     results: bookingsData
   })
